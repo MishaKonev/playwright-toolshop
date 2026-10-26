@@ -1,7 +1,7 @@
 # Toolshop Test Automation — Playwright + TypeScript
 
-[![Playwright Tests](https://github.com/GITHUB_USER/playwright-toolshop/actions/workflows/playwright.yml/badge.svg)](https://github.com/GITHUB_USER/playwright-toolshop/actions/workflows/playwright.yml)
-[![Test report](https://img.shields.io/badge/report-GitHub%20Pages-blue)](https://GITHUB_USER.github.io/playwright-toolshop/)
+[![Playwright Tests](https://github.com/MishaKonev/playwright-toolshop/actions/workflows/playwright.yml/badge.svg)](https://github.com/MishaKonev/playwright-toolshop/actions/workflows/playwright.yml)
+[![Test report](https://img.shields.io/badge/report-GitHub%20Pages-blue)](https://MishaKonev.github.io/playwright-toolshop/)
 
 End-to-end UI and REST API test automation framework for
 [Practice Software Testing — Toolshop](https://practicesoftwaretesting.com), a demo e-commerce
@@ -10,7 +10,7 @@ application built for testing practice.
 **Author:** Mykhailo Koniev — QA Automation Engineer ·
 [LinkedIn](https://linkedin.com/in/mykhailo-koniev)
 
-📊 **Latest HTML report:** https://GITHUB_USER.github.io/playwright-toolshop/
+📊 **Latest HTML report:** https://MishaKonev.github.io/playwright-toolshop/
 
 ## What this project demonstrates
 
@@ -60,7 +60,7 @@ Playwright Test · TypeScript · Node.js · GitHub Actions · Docker · Prettier
 Requirements: Node.js 18+ (CI uses Node 22).
 
 ```bash
-git clone https://github.com/GITHUB_USER/playwright-toolshop.git
+git clone https://github.com/MishaKonev/playwright-toolshop.git
 cd playwright-toolshop
 npm ci
 npx playwright install chromium
