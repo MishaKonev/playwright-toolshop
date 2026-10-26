@@ -1,0 +1,26 @@
+{
+  "name": "playwright-toolshop",
+  "version": "1.0.0",
+  "description": "Playwright + TypeScript E2E and API test automation framework for the Practice Software Testing Toolshop demo app",
+  "scripts": {
+    "test": "playwright test",
+    "test:ui": "playwright test --project=chromium",
+    "test:api": "playwright test --project=api",
+    "test:smoke": "playwright test --grep @smoke",
+    "report": "playwright show-report test-output/playwright-report",
+    "typecheck": "tsc",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "author": "Mykhailo Koniev",
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "1.55.1",
+    "@trivago/prettier-plugin-sort-imports": "5.2.2",
+    "@types/node": "22.7.5",
+    "dotenv": "16.4.5",
+    "prettier": "3.4.1",
+    "typescript": "5.6.3"
+  },
+  "private": true
+}
