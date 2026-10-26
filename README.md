@@ -1,6 +1,6 @@
 # Toolshop Test Automation — Playwright + TypeScript
 
-[![Playwright Tests](https://github.com/MishaKonev/playwright-toolshop/actions/workflows/playwright.yml/badge.svg)](https://github.com/MishaKonev/playwright-toolshop/actions/workflows/playwright.yml)
+[![Playwright Tests](https://github.com/MishaKonev/playwright-toolshop/actions/workflows/playwright.yml/badge.svg?branch=main)](https://github.com/MishaKonev/playwright-toolshop/actions/workflows/playwright.yml)
 [![Test report](https://img.shields.io/badge/report-GitHub%20Pages-blue)](https://MishaKonev.github.io/playwright-toolshop/)
 
 End-to-end UI and REST API test automation framework for
