@@ -1,9 +1,11 @@
 import { Page } from '@playwright/test';
+import { API_URL } from '../fixtures/creds';
 import { Paginated, Product } from '../interfaces/interfaces';
 
 // The app loads the catalog with an HTTP QUERY request to /products (filters go in the body),
 // so the pattern matches the bare path and leaves /products/{id} and /products/search alone
-const PRODUCT_LIST = /api\.practicesoftwaretesting\.com\/products(\?.*)?$/;
+const PRODUCT_LIST = (url: URL) =>
+  url.href.startsWith(API_URL) && url.pathname.endsWith('/products');
 
 export const mocks = {
   // Patches the real response instead of inventing one from scratch: the UI needs fields

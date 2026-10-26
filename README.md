@@ -24,9 +24,9 @@ application built for testing practice.
 | **RBAC testing**         | Admin, customer and guest access checked both in the UI and on the API ([`tests/rbac/`](tests/rbac), [`users.api.spec.ts`](tests/api/users.api.spec.ts))                      |
 | **Network mocking**      | `page.route()` patches real API responses and simulates server errors ([`tests/mocks/`](tests/mocks))                                                                         |
 | **E2E flows**            | Search, sorting, cart calculations and a full checkout                                                                                                                        |
-| **CI/CD**                | GitHub Actions: type check + Prettier, tests in **3 parallel shards**, merged HTML report published to **GitHub Pages**, nightly run                                          |
+| **CI/CD**                | GitHub Actions: type check + Prettier, then **3 parallel shards** against the app started in Docker, merged HTML report published to **GitHub Pages**, nightly run            |
 | **Debugging**            | Traces, screenshots and videos kept for failed tests                                                                                                                          |
-| **Docker**               | Run the whole suite in the official Playwright image                                                                                                                          |
+| **Docker**               | CI starts the app under test with Docker Compose ([`docker/toolshop/`](docker/toolshop)) and runs tests inside the official Playwright image                                  |
 
 ## Tech stack
 
@@ -36,6 +36,7 @@ Playwright Test · TypeScript · Node.js · GitHub Actions · Docker · Prettier
 
 ```
 ├── .github/workflows/   # CI: lint, sharded test run, report publishing
+├── docker/toolshop/     # Docker Compose setup of the app under test for CI
 ├── fixtures/            # Credentials, URLs and storageState paths (env-driven)
 ├── helpers/
 │   ├── api/             # ApiClient built on Playwright APIRequestContext
@@ -43,6 +44,7 @@ Playwright Test · TypeScript · Node.js · GitHub Actions · Docker · Prettier
 │   └── payloads.ts      # Test data builders
 ├── interfaces/          # TypeScript types for API payloads and responses
 ├── pages/               # Page Objects + testExtender.ts with custom fixtures
+├── scripts/             # Starts and seeds the dockerized app
 ├── tests/
 │   ├── api/             # REST API tests (no browser)
 │   ├── cart/            # Cart and checkout
@@ -89,6 +91,9 @@ docker run --rm toolshop-tests
 
 ## Notes
 
+- In CI the tests run against a local copy of the app started from its authors' Docker images
+  ([`scripts/start-toolshop.sh`](scripts/start-toolshop.sh)): the hosted demo shows a Cloudflare bot
+  check to cloud runners. Locally the tests use the hosted demo by default.
 - The application under test is a public shared demo, so tests create their own data and never
   modify data that belongs to other users.
 - The catalog loads products with an HTTP `QUERY` request and sends filters in the request body,

@@ -30,21 +30,28 @@ jobs:
   test:
     needs: lint
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     strategy:
       fail-fast: false
       matrix:
         shard: [1/3, 2/3, 3/3]
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version-file: .nvmrc
-          cache: npm
-      - run: npm ci
-      - run: npx playwright install --with-deps chromium
+      # Tests run against a local copy of the app: the hosted demo blocks CI runners with a
+      # Cloudflare bot check
+      - name: Start Toolshop in Docker
+        run: bash scripts/start-toolshop.sh
+      # The official Playwright image already has the browsers and their system libraries,
+      # so no job has to install them with apt. Host networking lets the tests reach the
+      # app on localhost. Keep the image tag in sync with @playwright/test in package.json.
       - name: Run tests (shard ${{ matrix.shard }})
-        run: npx playwright test --shard=${{ matrix.shard }}
+        timeout-minutes: 15
+        run: |
+          docker run --rm --network host --ipc host \
+            -e CI=1 -e BASE_URL=http://localhost:4200 -e API_URL=http://localhost:8091 \
+            -v "$PWD":/work -w /work \
+            mcr.microsoft.com/playwright:v1.55.1-noble \
+            bash -c "npm ci && npx playwright test --shard=${{ matrix.shard }}"
       - name: Upload blob report
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
@@ -54,16 +61,10 @@ jobs:
           retention-days: 7
 
   report:
-    # Merges the shard reports into one HTML report and publishes it to GitHub Pages
+    # Merges the shard reports into one HTML report
     if: ${{ !cancelled() }}
     needs: test
     runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -83,11 +84,23 @@ jobs:
           name: html-report
           path: playwright-report
           retention-days: 14
-      - name: Publish report to GitHub Pages
+      - name: Prepare report for GitHub Pages
         if: github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@v3
         with:
           path: playwright-report
+
+  deploy:
+    # GitHub Pages only accepts deployments from main, so other branches stop at the artifact
+    if: ${{ !cancelled() && github.ref == 'refs/heads/main' && needs.report.result == 'success' }}
+    needs: report
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
       - id: deploy
-        if: github.ref == 'refs/heads/main'
         uses: actions/deploy-pages@v4
